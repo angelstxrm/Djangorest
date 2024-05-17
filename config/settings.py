@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += [
+    'drf_spectacular',
     'store',
 ]
 
@@ -135,11 +136,59 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_URL = '/media/'
+STATIC_DIR = os.path.join(BASE_DIR,'static/')
+STATICFILES_DIRS = [STATIC_DIR]
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# DJANGO REST FRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',),
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FileUploadParser',
+    ],
+
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# SPECTACULAR DRF
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Store by ange1',
+        'DESCRIPTION': 'Store clothing',
+    'VERSION': '1.0.0',
+
+    'SERVE_PERMISSIONS': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'SERVE_AUTHENTICATION': [
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+
+    'SWAGGER_UI_SETTINGS': {
+        'DeepLinking': True,
+        'DisplayOperationId': True,
+    },
+
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SORT_OPERATIONS': False,
+
+}
