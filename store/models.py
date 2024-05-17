@@ -14,11 +14,11 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    title = models.CharField('Название', max_length=100, unique=True)
-    description = models.TextField('Описание')
-    price = models.DecimalField('Цена', max_digits=10, decimal_places=2)
+    title = models.CharField('Название товара', max_length=100, unique=True)
+    description = models.TextField('Описание товара')
+    price = models.DecimalField('Цена', max_digits=10, decimal_places=2, help_text=25000)
     quantity = models.PositiveIntegerField('Количество', default=0)
-    image = models.ImageField(upload_to='images/')
+    image = models.ImageField(upload_to='images/', null=True)
     is_published = models.BooleanField('Опубликовано', default=True)
     created_at = models.DateTimeField('Дата создания', auto_now_add=True)
     updated_at = models.DateTimeField('Дата обновления', auto_now=True)
