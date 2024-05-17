@@ -11,23 +11,21 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import environ
+
 import os
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+import environ
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+root = environ.Path(__file__) - 2
+env = environ.Env()
+environ.Env.read_env(env.str(root(), '.env'))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t%rl7uq_)#tqfes1f+2b1nsz4-og0f(&_)4xqpax1g+*@rn#%x'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+BASE_DIR = root()
 
-ALLOWED_HOSTS = []
+SECRET_KEY = env.str('SECRET_KEY')
+DEBUG = env.bool('DEBUG', default=False)
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,7 +40,6 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += [
-    'django-environ',
     'rest_framework',
 ]
 
@@ -82,14 +79,20 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'drftest',
-        'USER': 'angelstxrm',
-        'PASSWORD': '121300',
-        'HOST': 'localhost',
-        'PORT': 5432,
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env.str('PG_DATABASE', 'postgres'),
+        'USER': env.str('PG_USER', 'postgres'),
+        'PASSWORD': env.str('PG_PASSWORD', 'postgres'),
+        'HOST': env.str('DB_HOST', 'localhost'),
+        'PORT': env.int('DB_PORT', '5432'),
+    },
+    'extra': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
 }
+
+
 
 
 
