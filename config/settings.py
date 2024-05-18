@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     'drf_spectacular',
     'store',
+    'cart',
 ]
 
 INSTALLED_APPS += [

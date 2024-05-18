@@ -14,9 +14,9 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    title = models.CharField('Название товара', max_length=100, unique=True)
+    title = models.CharField('Название товара', max_length=150, unique=True)
     description = models.TextField('Описание товара')
-    price = models.DecimalField('Цена', max_digits=10, decimal_places=2, help_text=25000)
+    price = models.DecimalField('Цена', max_digits=32, decimal_places=2, help_text=25000)
     quantity = models.PositiveIntegerField('Количество', default=0)
     image = models.ImageField(upload_to='images/', null=True)
     is_published = models.BooleanField('Опубликовано', default=True)
