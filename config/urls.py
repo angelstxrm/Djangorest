@@ -32,6 +32,8 @@ router.register(r'products', ProductViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/v1/', include(router.urls)),
     path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs')
