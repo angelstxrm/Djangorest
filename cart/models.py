@@ -15,8 +15,8 @@ class Cart(models.Model):
         return str(self.pk)
     
     class Meta:
-        verbose_name = 'Корзина'
-        verbose_name_plural = 'Корзины'
+        verbose_name = 'Корзину'
+        verbose_name_plural = 'Корзина'
      
 
 class CartItem(models.Model):
