@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.core.validators import MinValueValidator
 
 from .models import Product
 
@@ -6,13 +7,14 @@ from .models import Product
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(slug_field='title', read_only=True)
     category_id = serializers.IntegerField(write_only=True)
+    price = serializers.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
 
     class Meta:
         model = Product
         fields = '__all__'
 
     # Валидация на цену.
-    def validate_price(self, value):
-        if value < 0:
-            raise serializers.ValidationError('Price must be greater than 0')
-        return value
+    # def validate_price(self, value):
+    #     if value < 0:
+    #         raise serializers.ValidationError('Цена не может быть меньше 0')
+    #     return value
