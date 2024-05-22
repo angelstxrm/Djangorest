@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from drf_spectacular.utils import extend_schema_view, extend_schema
 
 from .serializers import ProductSerializer
@@ -13,6 +13,7 @@ from .models import Product
 )
 
 class ProductViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     http_method_names = ['get', 'post', 'put', 'delete']
