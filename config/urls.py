@@ -36,9 +36,12 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('auth/', include('djoser.urls.jwt')),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/v1/', include(router.urls)),
+    path('api-products/', include('cart.urls')),
+    path('api-products/', include(router.urls)),
     path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs')
+    
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    
