@@ -149,6 +149,10 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
+# AUTH USER MODEL
+
+AUTH_USER_MODEL = 'users.User'
+
 # SMTP
 
 EMAIL_USE_TLS = env.bool('EMAIL_TLS', default=True)
