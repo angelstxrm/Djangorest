@@ -4,9 +4,15 @@ from store.models import Product
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    total_price = models.DecimalField('Общая сумма', max_digits=32, decimal_places=2, default=0.00)
 
     def __str__(self):
         return f"Cart of {self.user.username}"
+    
+    def update_total_price(self):
+        total = sum(item.product.price * item.quantity for item in self.items.all())
+        self.total_price = total
+        self.save()
     
     class Meta:
         verbose_name = 'Корзина'

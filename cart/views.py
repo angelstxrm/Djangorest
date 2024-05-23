@@ -1,41 +1,109 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from .models import Cart, CartItem
 from .serializers import CartSerializer, CartItemSerializer
-from store.models import Product
-from django.contrib.auth.models import User
 
-class CartDetailView(APIView):
+@extend_schema(
+    tags = ['Корзина пользователей']    
+)
+
+
+class CartListCreateView(generics.ListCreateAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        description="Получите список корзин или создайте новую корзину.",
+        responses={200: CartSerializer(many=True)},
+    )
     def get(self, request, *args, **kwargs):
-        user = request.user
-        cart, created = Cart.objects.get_or_create(user=user)
-        serializer = CartSerializer(cart)
-        return Response(serializer.data)
+        return super().get(request, *args, **kwargs)
 
-class AddToCartView(APIView):
+    @extend_schema(
+        description="Создайте новую корзину.",
+        request=CartSerializer,
+        responses={201: CartSerializer},
+    )
     def post(self, request, *args, **kwargs):
-        user = request.user
-        cart, created = Cart.objects.get_or_create(user=user)
-        product_id = request.data.get('product_id')
-        quantity = request.data.get('quantity', 1)
-        product = get_object_or_404(Product, id=product_id)
+        return super().post(request, *args, **kwargs)
 
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-        if not created:
-            cart_item.quantity += int(quantity)
-            cart_item.save()
-        serializer = CartItemSerializer(cart_item)
-        return Response(serializer.data.data, status=status.HTTP_201_CREATED)
+@extend_schema(
+    tags = ['Корзина пользователей']    
+)
 
-class RemoveFromCartView(APIView):
+class CartRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        description="Извлекайте, обновляйте или удаляйте корзину.",
+        responses={200: CartSerializer},
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @extend_schema(
+        description="Обновление корзины",
+        request=CartSerializer,
+        responses={200: CartSerializer},
+    )
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+    @extend_schema(
+        description="Удаление корзины",
+        responses={204: None},
+    )
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
+
+@extend_schema(
+    tags = ['Корзина пользователей']    
+)
+
+class CartItemCreateView(generics.CreateAPIView):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        description="Создайте новый товар в корзине",
+        request=CartItemSerializer,
+        responses={201: CartItemSerializer},
+    )
     def post(self, request, *args, **kwargs):
-        user = request.user
-        cart = get_object_or_404(Cart, user=user)
-        product_id = request.data.get('product_id')
-        product = get_object_or_404(Product, id=product_id)
+        return super().post(request, *args, **kwargs)
 
-        cart_item = get_object_or_404(CartItem, cart=cart, product=product)
-        cart_item.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+@extend_schema(
+    tags = ['Корзина пользователей']    
+)
+
+class CartItemRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CartItem.objects.all()
+    serializer_class = CartItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        description="Извлеките, обновите или удалите товар из корзины.",
+        responses={200: CartItemSerializer},
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @extend_schema(
+        description="Обновить товар в корзине",
+        request=CartItemSerializer,
+        responses={200: CartItemSerializer},
+    )
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+    @extend_schema(
+        description="Удалить товар из корзины",
+        responses={204: None},
+    )
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
